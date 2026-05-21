@@ -3,27 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS & iOS Lifecycle Tracker</title>
+    <title>OSLT - OS Lifecycle & Hardware Tracker</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f1115; color: #e1e7ef; padding: 30px; margin: 0; }
-        h1 { border-bottom: 2px solid #2f3542; padding-bottom: 15px; color: #ffffff; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        
+        /* Header & Navigation Menu */
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2f3542; padding-bottom: 15px; position: relative; }
+        h1 { margin: 0; color: #ffffff; font-size: 1.8rem; }
+        
+        .menu-container { position: relative; }
+        .menu-btn { background: #181d25; border: 1px solid #2a313d; color: #fff; font-size: 1.5rem; padding: 8px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
+        .menu-btn:hover { background: #222a36; }
+        
+        .dropdown-menu { display: none; position: absolute; right: 0; top: 50px; background: #181d25; border: 1px solid #2a313d; border-radius: 8px; width: 240px; box-shadow: 0 8px 166px rgba(0,0,0,0.4); z-index: 100; overflow: hidden; }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a { display: block; color: #ccd6f6; padding: 12px 20px; text-decoration: none; font-size: 0.95rem; border-bottom: 1px solid #2a313d; }
+        .dropdown-menu a:hover { background: #0078d4; color: #fff; }
+        
+        /* Signature item at the bottom of the menu */
+        .menu-signature { display: block; padding: 12px 20px; font-size: 0.85rem; color: #8892b0; text-align: center; background: #13171e; border-top: 1px solid #2a313d; font-style: italic; }
+
+        /* Pages Management */
+        .page { display: none; margin-top: 20px; }
+        .page.active { display: block; }
+
+        /* Grid & Cards (Home Page) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .card { background: #181d25; padding: 20px; border-radius: 12px; border: 1px solid #2a313d; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .card h2 { margin-top: 0; color: #fff; font-size: 1.4rem; display: flex; justify-content: space-between; align-items: center; }
         .badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; background: #2f3542; color: #a4b0be; }
         p { margin: 10px 0; font-size: 0.95rem; color: #ccd6f6; }
         strong { color: #8892b0; }
         .status { font-weight: bold; padding: 4px 8px; border-radius: 6px; display: inline-block; font-size: 0.85rem; }
+
+        /* Hardware Requirements Styles (Page 2) */
+        .platform-container { margin-bottom: 40px; }
+        .platform-heading { font-size: 1.8rem; margin-bottom: 20px; padding-bottom: 5px; border-bottom: 2px solid #2a313d; }
+        .win-heading { color: #0078d4; }
+        .ios-heading { color: #a2aaad; }
+        
+        .req-section { background: #181d25; border: 1px solid #2a313d; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        .req-section h3 { margin-top: 0; font-size: 1.3rem; margin-bottom: 15px; color: #ffffff; }
+        .req-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
+        .req-item { background: #1f2632; padding: 12px; border-radius: 8px; font-size: 0.9rem; border-left: 4px solid #2a313d; }
     </style>
 </head>
 <body>
 
-    <h1>💻 Operating System Lifecycle Tracker</h1>
-    <p>Real-time monitoring of Windows and iOS versions, patches, and End-of-Life (EOL) metrics.</p>
-    
-    <div class="grid" id="os-container"></div>
+    <header>
+        <h1>💻 OSLT Dashboard</h1>
+        <div class="menu-container">
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <div class="dropdown-menu" id="nav-menu">
+                <a href="#" onclick="showPage('home')">📊 OSes Info</a>
+                <a href="#" onclick="showPage('hardware')">📱 Supported Devices / Specs</a>
+                <div class="menu-signature">Made by KernelPanic</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE 1: HOME (OS INFO) -->
+    <div id="home-page" class="page active">
+        <p style="color: #8892b0; margin-bottom: 20px;">Real-time monitoring of Windows and iOS versions, patches, and End-of-Life (EOL) metrics.</p>
+        <div class="grid" id="os-container"></div>
+    </div>
+
+    <!-- PAGE 2: SUPPORTED COMPUTERS / PHONES (REQUIREMENTS) -->
+    <div id="hardware-page" class="page">
+        <p style="color: #8892b0; margin-bottom: 30px;">Official system requirements and model compatibility indexes for multi-generation deployments.</p>
+
+        <!-- ================= WINDOWS REGION ================= -->
+        <div class="platform-container">
+            <h2 class="platform-heading win-heading">🪟 Windows Requirements</h2>
+            
+            <!-- WINDOWS 11 -->
+            <div class="req-section">
+                <h3>Windows 11 Specs</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster, 2+ cores, 64-bit (Intel 8th Gen / AMD Ryzen 2000+)</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 4 GB minimum</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 64 GB available storage</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Firmware:</strong> UEFI & Secure Boot capable</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Security:</strong> TPM version 2.0 chip enabled</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 12 compatible with WDDM 2.0</div>
+                </div>
+            </div>
+
+            <!-- WINDOWS 10 -->
+            <div class="req-section">
+                <h3>Windows 10 Specs</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster compatible processor or SoC</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB for 32-bit or 2 GB for 64-bit</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB for 32-bit or 20 GB for 64-bit OS</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 9 or later with WDDM 1.0 driver</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Display:</strong> 800 x 600 minimum resolution</div>
+                </div>
+            </div>
+
+            <!-- WINDOWS 8.x -->
+            <div class="req-section">
+                <h3>Windows 8 / 8.1 Specs</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz with support for PAE, NX, and SSE2 features</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB (32-bit) or 2 GB (64-bit)</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB (32-bit) or 20 GB (64-bit) disk space</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> Microsoft DirectX 9 graphics device with WDDM driver</div>
+                </div>
+            </div>
+
+            <!-- WINDOWS 7 -->
+            <div class="req-section">
+                <h3>Windows 7 Specs</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster 32-bit (x86) or 64-bit (x64)</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB (32-bit) or 2 GB (64-bit)</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB (32-bit) or 20 GB (64-bit) standard HDD space</div>
+                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 9 graphics with WDDM 1.0 or higher driver</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= APPLE IOS REGION ================= -->
+        <div class="platform-container">
+            <h2 class="platform-heading ios-heading">🍏 iOS Device Compatibility</h2>
+
+            <!-- IOS 26 -->
+            <div class="req-section">
+                <h3>iOS 26 Supported Models</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 17 Series:</strong> iPhone 17, 17 Plus, 17 Pro, 17 Pro Max, Air, 17e</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 16 Series:</strong> iPhone 16, 16 Plus, 16 Pro, 16 Pro Max, 16e</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 15 Series:</strong> iPhone 15, 15 Plus, 15 Pro, 15 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> iPhone 14, 14 Plus, 14 Pro, 14 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> iPhone 13 mini, 13, 13 Pro, 13 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 12 Series:</strong> iPhone 12 mini, 12, 12 Pro, 12 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 11 Series:</strong> iPhone 11, 11 Pro, 11 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone SE Series:</strong> iPhone SE (2nd generation), iPhone SE (3rd generation)</div>
+                </div>
+            </div>
+
+            <!-- IOS 18 -->
+            <div class="req-section">
+                <h3>iOS 18 Supported Models</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 16 Series:</strong> 16, 16 Plus, 16 Pro, 16 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 15 Series:</strong> 15, 15 Plus, 15 Pro, 15 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> 14, 14 Plus, 14 Pro, 14 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> 13, 13 mini, 13 Pro, 13 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>Legacy Devices:</strong> iPhone 12, 11, XS, XR, SE (2nd Gen+)</div>
+                </div>
+            </div>
+
+            <!-- IOS 16 -->
+            <div class="req-section">
+                <h3>iOS 16 Supported Models</h3>
+                <div class="req-grid">
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> 14, 14 Plus, 14 Pro, 14 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> 13, 13 mini, 13 Pro, 13 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 12 Series:</strong> 12, 12 mini, 12 Pro, 12 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 11 Series:</strong> 11, 11 Pro, 11 Pro Max</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone X / 8 Legacies:</strong> iPhone X, iPhone 8, iPhone 8 Plus</div>
+                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>Other Legacies:</strong> iPhone XS, XR, SE (2nd Gen)</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // Menu Toggle Animation
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('show');
+        }
+
+        // Single Page Navigation Engine
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            document.getElementById('nav-menu').classList.remove('show');
+        }
+
+        // Close menu if clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-btn')) {
+                const dropdown = document.getElementById('nav-menu');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Fetch OS Metadata Feed
         fetch('os-data.json')
             .then(res => {
                 if (!res.ok) throw new Error('Error loading JSON data file');
