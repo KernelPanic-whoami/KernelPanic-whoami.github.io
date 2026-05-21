@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSLT - OS Lifecycle & Hardware Tracker</title>
+    <title>OSLT - Dashboard & Mini-Game</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f1115; color: #e1e7ef; padding: 30px; margin: 0; }
         
@@ -15,12 +15,10 @@
         .menu-btn { background: #181d25; border: 1px solid #2a313d; color: #fff; font-size: 1.5rem; padding: 8px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
         .menu-btn:hover { background: #222a36; }
         
-        .dropdown-menu { display: none; position: absolute; right: 0; top: 50px; background: #181d25; border: 1px solid #2a313d; border-radius: 8px; width: 240px; box-shadow: 0 8px 166px rgba(0,0,0,0.4); z-index: 100; overflow: hidden; }
+        .dropdown-menu { display: none; position: absolute; right: 0; top: 50px; background: #181d25; border: 1px solid #2a313d; border-radius: 8px; width: 250px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); z-index: 100; overflow: hidden; }
         .dropdown-menu.show { display: block; }
         .dropdown-menu a { display: block; color: #ccd6f6; padding: 12px 20px; text-decoration: none; font-size: 0.95rem; border-bottom: 1px solid #2a313d; }
         .dropdown-menu a:hover { background: #0078d4; color: #fff; }
-        
-        /* Signature item at the bottom of the menu */
         .menu-signature { display: block; padding: 12px 20px; font-size: 0.85rem; color: #8892b0; text-align: center; background: #13171e; border-top: 1px solid #2a313d; font-style: italic; }
 
         /* Pages Management */
@@ -41,11 +39,15 @@
         .platform-heading { font-size: 1.8rem; margin-bottom: 20px; padding-bottom: 5px; border-bottom: 2px solid #2a313d; }
         .win-heading { color: #0078d4; }
         .ios-heading { color: #a2aaad; }
-        
         .req-section { background: #181d25; border: 1px solid #2a313d; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .req-section h3 { margin-top: 0; font-size: 1.3rem; margin-bottom: 15px; color: #ffffff; }
         .req-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
         .req-item { background: #1f2632; padding: 12px; border-radius: 8px; font-size: 0.9rem; border-left: 4px solid #2a313d; }
+
+        /* Dino Game Box (Page 3) */
+        #game-area { text-align: center; max-width: 600px; margin: 30px auto; background: #181d25; padding: 20px; border-radius: 12px; border: 1px solid #2a313d; }
+        canvas { background: #f7f7f7; display: block; margin: 20px auto; border-radius: 6px; border: 2px solid #333; }
+        .game-instructions { font-size: 0.9rem; color: #8892b0; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -57,6 +59,7 @@
             <div class="dropdown-menu" id="nav-menu">
                 <a href="#" onclick="showPage('home')">📊 OSes Info</a>
                 <a href="#" onclick="showPage('hardware')">📱 Supported Devices / Specs</a>
+                <a href="#" onclick="showPage('game'); initDinoGame();">🦖 Dino Mini-Game</a>
                 <div class="menu-signature">Made by KernelPanic</div>
             </div>
         </div>
@@ -64,167 +67,130 @@
 
     <!-- PAGE 1: HOME (OS INFO) -->
     <div id="home-page" class="page active">
-        <p style="color: #8892b0; margin-bottom: 20px;">Real-time monitoring of Windows and iOS versions, patches, and End-of-Life (EOL) metrics.</p>
+        <p style="color: #8892b0; margin-bottom: 20px;">Real-time monitoring of Windows, iOS and Extra versions, patches, and End-of-Life (EOL) metrics.</p>
         <div class="grid" id="os-container"></div>
     </div>
 
     <!-- PAGE 2: SUPPORTED COMPUTERS / PHONES (REQUIREMENTS) -->
     <div id="hardware-page" class="page">
         <p style="color: #8892b0; margin-bottom: 30px;">Official system requirements and model compatibility indexes for multi-generation deployments.</p>
-
-        <!-- ================= WINDOWS REGION ================= -->
         <div class="platform-container">
             <h2 class="platform-heading win-heading">🪟 Windows Requirements</h2>
-            
-            <!-- WINDOWS 11 -->
-            <div class="req-section">
-                <h3>Windows 11 Specs</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster, 2+ cores, 64-bit (Intel 8th Gen / AMD Ryzen 2000+)</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 4 GB minimum</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 64 GB available storage</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Firmware:</strong> UEFI & Secure Boot capable</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Security:</strong> TPM version 2.0 chip enabled</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 12 compatible with WDDM 2.0</div>
-                </div>
-            </div>
-
-            <!-- WINDOWS 10 -->
-            <div class="req-section">
-                <h3>Windows 10 Specs</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster compatible processor or SoC</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB for 32-bit or 2 GB for 64-bit</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB for 32-bit or 20 GB for 64-bit OS</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 9 or later with WDDM 1.0 driver</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Display:</strong> 800 x 600 minimum resolution</div>
-                </div>
-            </div>
-
-            <!-- WINDOWS 8.x -->
-            <div class="req-section">
-                <h3>Windows 8 / 8.1 Specs</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz with support for PAE, NX, and SSE2 features</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB (32-bit) or 2 GB (64-bit)</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB (32-bit) or 20 GB (64-bit) disk space</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> Microsoft DirectX 9 graphics device with WDDM driver</div>
-                </div>
-            </div>
-
-            <!-- WINDOWS 7 -->
-            <div class="req-section">
-                <h3>Windows 7 Specs</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>CPU:</strong> 1 GHz or faster 32-bit (x86) or 64-bit (x64)</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>RAM:</strong> 1 GB (32-bit) or 2 GB (64-bit)</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>Storage:</strong> 16 GB (32-bit) or 20 GB (64-bit) standard HDD space</div>
-                    <div class="req-item" style="border-left-color: #0078d4;"><strong>GPU:</strong> DirectX 9 graphics with WDDM 1.0 or higher driver</div>
-                </div>
-            </div>
+            <!-- WIN 11 -->
+            <div class="req-section"><h3>Windows 11 Specs</h3><div class="req-grid"><div class="req-item" style="border-left-color:#0078d4"><strong>CPU:</strong> 1 GHz+, 2+ cores, 64-bit (Intel 8th Gen / Ryzen 2000+)</div><div class="req-item" style="border-left-color:#0078d4"><strong>RAM:</strong> 4 GB</div><div class="req-item" style="border-left-color:#0078d4"><strong>Security:</strong> TPM 2.0 & Secure Boot</div></div></div>
+            <!-- WIN 10 -->
+            <div class="req-section"><h3>Windows 10 Specs</h3><div class="req-grid"><div class="req-item" style="border-left-color:#0078d4"><strong>RAM:</strong> 1 GB (32-bit) / 2 GB (64-bit)</div><div class="req-item" style="border-left-color:#0078d4"><strong>Storage:</strong> 20 GB free disk space</div><div class="req-item" style="border-left-color:#0078d4"><strong>GPU:</strong> DirectX 9 + WDDM 1.0</div></div></div>
+            <!-- WIN 8.x -->
+            <div class="req-section"><h3>Windows 8 / 8.1 Specs</h3><div class="req-grid"><div class="req-item" style="border-left-color:#0078d4"><strong>CPU:</strong> 1 GHz with PAE, NX, and SSE2</div><div class="req-item" style="border-left-color:#0078d4"><strong>RAM:</strong> 1 GB (32-bit) / 2 GB (64-bit)</div></div></div>
+            <!-- WIN 7 -->
+            <div class="req-section"><h3>Windows 7 Specs</h3><div class="req-grid"><div class="req-item" style="border-left-color:#0078d4"><strong>CPU:</strong> 1 GHz x86 or x64</div><div class="req-item" style="border-left-color:#0078d4"><strong>Storage:</strong> 16 GB (32-bit) / 20 GB (64-bit)</div></div></div>
         </div>
-
-        <!-- ================= APPLE IOS REGION ================= -->
         <div class="platform-container">
             <h2 class="platform-heading ios-heading">🍏 iOS Device Compatibility</h2>
-
             <!-- IOS 26 -->
-            <div class="req-section">
-                <h3>iOS 26 Supported Models</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 17 Series:</strong> iPhone 17, 17 Plus, 17 Pro, 17 Pro Max, Air, 17e</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 16 Series:</strong> iPhone 16, 16 Plus, 16 Pro, 16 Pro Max, 16e</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 15 Series:</strong> iPhone 15, 15 Plus, 15 Pro, 15 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> iPhone 14, 14 Plus, 14 Pro, 14 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> iPhone 13 mini, 13, 13 Pro, 13 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 12 Series:</strong> iPhone 12 mini, 12, 12 Pro, 12 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 11 Series:</strong> iPhone 11, 11 Pro, 11 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone SE Series:</strong> iPhone SE (2nd generation), iPhone SE (3rd generation)</div>
-                </div>
-            </div>
-
+            <div class="req-section"><h3>iOS 26 Supported Models</h3><div class="req-grid"><div class="req-item" style="border-left-color:#a2aaad"><strong>iPhone 17 Series:</strong> 17, 17 Plus, 17 Pro, 17 Pro Max, Air, 17e</div><div class="req-item" style="border-left-color:#a2aaad"><strong>iPhone 16 Series:</strong> 16, 16 Plus, 16 Pro, 16 Pro Max, 16e</div><div class="req-item" style="border-left-color:#a2aaad"><strong>iPhone Legacy/SE:</strong> iPhone 15, 14, 13, 12, 11 Series, SE (2nd & 3rd Gen)</div></div></div>
             <!-- IOS 18 -->
-            <div class="req-section">
-                <h3>iOS 18 Supported Models</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 16 Series:</strong> 16, 16 Plus, 16 Pro, 16 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 15 Series:</strong> 15, 15 Plus, 15 Pro, 15 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> 14, 14 Plus, 14 Pro, 14 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> 13, 13 mini, 13 Pro, 13 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>Legacy Devices:</strong> iPhone 12, 11, XS, XR, SE (2nd Gen+)</div>
-                </div>
-            </div>
-
+            <div class="req-section"><h3>iOS 18 Supported Models</h3><div class="req-grid"><div class="req-item" style="border-left-color:#a2aaad"><strong>iPhone 16 / 15 / 14 / 13 / 12 / 11 Series</strong> and XS, XR, SE 2nd Gen+</div></div></div>
             <!-- IOS 16 -->
-            <div class="req-section">
-                <h3>iOS 16 Supported Models</h3>
-                <div class="req-grid">
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 14 Series:</strong> 14, 14 Plus, 14 Pro, 14 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 13 Series:</strong> 13, 13 mini, 13 Pro, 13 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 12 Series:</strong> 12, 12 mini, 12 Pro, 12 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone 11 Series:</strong> 11, 11 Pro, 11 Pro Max</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>iPhone X / 8 Legacies:</strong> iPhone X, iPhone 8, iPhone 8 Plus</div>
-                    <div class="req-item" style="border-left-color: #a2aaad;"><strong>Other Legacies:</strong> iPhone XS, XR, SE (2nd Gen)</div>
-                </div>
-            </div>
+            <div class="req-section"><h3>iOS 16 Supported Models</h3><div class="req-grid"><div class="req-item" style="border-left-color:#a2aaad"><strong>iPhone 14 / 13 / 12 / 11 Series</strong>, iPhone X, 8, 8 Plus, XS, XR, SE 2nd Gen</div></div></div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: DINO GAME (MINI GAME) -->
+    <div id="game-page" class="page">
+        <div id="game-area">
+            <h2 style="color: #00ff77; margin-top: 0;">🦖 Chrome Dino Retro Arcade</h2>
+            <p>Score: <span id="score-val" style="color: #fff; font-weight: bold;">0</span></p>
+            <canvas id="dinoCanvas" width="550" height="150"></canvas>
+            <div class="game-instructions">Press <strong>SPACEBAR</strong> or <strong>TAP/CLICK</strong> on the canvas to JUMP. Avoid the cacti!</div>
         </div>
     </div>
 
     <script>
-        // Menu Toggle Animation
-        function toggleMenu() {
-            document.getElementById('nav-menu').classList.toggle('show');
-        }
-
-        // Single Page Navigation Engine
+        function toggleMenu() { document.getElementById('nav-menu').classList.toggle('show'); }
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(`${pageId}-page`).classList.add('active');
             document.getElementById('nav-menu').classList.remove('show');
+            if(pageId !== 'game') { isGameRunning = false; }
         }
-
-        // Close menu if clicking outside
         window.onclick = function(event) {
             if (!event.target.matches('.menu-btn')) {
                 const dropdown = document.getElementById('nav-menu');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                }
+                if (dropdown.classList.contains('show')) dropdown.classList.remove('show');
             }
         }
 
-        // Fetch OS Metadata Feed
+        // Fetch OS Engine
         fetch('os-data.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Error loading JSON data file');
-                return res.json();
-            })
+            .then(res => { if (!res.ok) throw new Error('Error loading JSON'); return res.json(); })
             .then(data => {
                 const container = document.getElementById('os-container');
                 data.forEach(os => {
                     const isActive = os.eol_date.includes("Supported") || os.eol_date.includes("Limited");
                     const statusBg = isActive ? "rgba(0, 255, 119, 0.15)" : "rgba(255, 85, 85, 0.15)";
                     const statusColor = isActive ? "#00ff77" : "#ff5555";
-                    const borderLeftColor = os.type === 'Windows' ? '#0078d4' : '#a2aaad';
+                    
+                    let borderLeftColor = '#2f3542'; 
+                    if (os.type === 'Windows') borderLeftColor = '#0078d4';
+                    else if (os.type === 'iOS') borderLeftColor = '#a2aaad';
+                    else if (os.type === 'Extra') borderLeftColor = '#eccc68'; // Giallo per Extra/MS-DOS
 
                     container.innerHTML += `
                         <div class="card" style="border-left: 6px solid ${borderLeftColor}">
-                            <h2>${os.os_name} <span class="badge">${os.type}</span></h2>
+                            <h2>${os.os_name} <span class="badge" style="background:${borderLeftColor}; color:#fff;">${os.type}</span></h2>
                             <p>📅 <strong>Release Date:</strong> ${os.release_date}</p>
                             <p>📦 <strong>Latest Patch:</strong> ${os.latest_version}</p>
                             <p>⏱️ <strong>Patch Date:</strong> ${os.latest_patch_date}</p>
-                            <p>🛑 <strong>EOL Status:</strong> 
-                                <span class="status" style="background: ${statusBg}; color: ${statusColor}">
-                                    ${os.eol_date}
-                                </span>
-                            </p>
+                            <p>🛑 <strong>EOL Status:</strong> <span class="status" style="background: ${statusBg}; color: ${statusColor}">${os.eol_date}</span></p>
                         </div>
                     `;
                 });
-            })
-            .catch(err => {
-                document.getElementById('os-container').innerHTML = `<p style="color:#ff5555;">⚠️ An error occurred: ${err.message}</p>`;
+            }).catch(err => { document.getElementById('os-container').innerHTML = `<p style="color:#ff5555;">⚠️ Error: ${err.message}</p>`; });
+
+        // 🦖 DINO GAME ENGINE 
+        let canvas, ctx, dino, obstacles, score, gameLoopInterval, isGameRunning = false;
+        function initDinoGame() {
+            if (isGameRunning) return;
+            canvas = document.getElementById("dinoCanvas");
+            ctx = canvas.getContext("2d");
+            dino = { x: 30, y: 120, width: 20, height: 30, vy: 0, gravity: 0.6, jumpForce: -10, isGrounded: true };
+            obstacles = []; score = 0; isGameRunning = true;
+            
+            window.addEventListener("keydown", handleKey);
+            canvas.addEventListener("click", () => { if(dino.isGrounded) { dino.vy = dino.jumpForce; dino.isGrounded = false; } });
+            
+            if(gameLoopInterval) clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(updateDinoGame, 1000 / 60);
+        }
+        function handleKey(e) { if (e.code === "Space" && dino.isGrounded) { dino.vy = dino.jumpForce; dino.isGrounded = false; e.preventDefault(); } }
+        function updateDinoGame() {
+            if (!isGameRunning) return;
+            dino.vy += dino.gravity; dino.y += dino.vy;
+            if (dino.y >= 120) { dino.y = 120; dino.vy = 0; dino.isGrounded = true; }
+            
+            if (Math.random() < 0.015 && (obstacles.length === 0 || obstacles[obstacles.length - 1].x < 400)) {
+                obstacles.push({ x: 550, y: 125, width: 15, height: 25 });
+            }
+            obstacles.forEach(o => o.x -= 4.5);
+            obstacles = obstacles.filter(o => o.x > -20);
+            
+            // Collisions Check
+            obstacles.forEach(o => {
+                if (dino.x < o.x + o.width && dino.x + dino.width > o.x && dino.y < o.y + o.height && dino.y + dino.height > o.y) {
+                    isGameRunning = false; clearInterval(gameLoopInterval);
+                    alert("Game Over! Your Score: " + Math.floor(score));
+                    initDinoGame(); // Restart
+                }
             });
+            score += 0.15; document.getElementById("score-val").innerText = Math.floor(score);
+            
+            // Draw Graphic View
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#333333"; ctx.fillRect(dino.x, dino.y, dino.width, dino.height); // Dino
+            ctx.fillStyle = "#ff5555"; obstacles.forEach(o => ctx.fillRect(o.x, o.y, o.width, o.height)); // Cacti
+            ctx.strokeStyle = "#666"; ctx.beginPath(); ctx.moveTo(0, 150); ctx.lineTo(550, 150); ctx.stroke(); // Ground
+        }
     </script>
 </body>
 </html>
