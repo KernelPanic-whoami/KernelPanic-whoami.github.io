@@ -1,5 +1,45 @@
 [
   {
+    "os_name": "MS-DOS",
+    "release_date": "1981-08-12",
+    "latest_version": "6.22 / 7.1",
+    "latest_patch_date": "1994-06-00",
+    "eol_date": "Ended (2000-12-31)",
+    "type": "Extra"
+  },
+  {
+    "os_name": "Windows 95",
+    "release_date": "1995-08-24",
+    "latest_version": "4.00.950 C (OSR 2.5)",
+    "latest_patch_date": "1997-11-26",
+    "eol_date": "Ended (2001-12-31)",
+    "type": "Windows"
+  },
+  {
+    "os_name": "Windows 98",
+    "release_date": "1998-06-25",
+    "latest_version": "SE (Second Edition)",
+    "latest_patch_date": "1999-05-05",
+    "eol_date": "Ended (2006-07-11)",
+    "type": "Windows"
+  },
+  {
+    "os_name": "Windows 2000",
+    "release_date": "2000-02-17",
+    "latest_version": "SP4 (Build 5.0.2195)",
+    "latest_patch_date": "2003-06-26",
+    "eol_date": "Ended (2010-07-13)",
+    "type": "Windows"
+  },
+  {
+    "os_name": "Windows ME",
+    "release_date": "2000-09-14",
+    "latest_version": "4.90.3000",
+    "latest_patch_date": "2000-09-14",
+    "eol_date": "Ended (2006-07-11)",
+    "type": "Windows"
+  },
+  {
     "os_name": "Windows XP",
     "release_date": "2001-10-25",
     "latest_version": "SP3 (Build 5.1.2600)",
