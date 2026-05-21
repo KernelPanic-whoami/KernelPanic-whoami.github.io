@@ -3,15 +3,15 @@ fetch('os-data.json')
     .then(data => {
         const container = document.getElementById('os-container');
         data.forEach(os => {
-            // Definisce un colore in base allo stato dell'Eol
-            const eolColor = (os.eol_date.includes("In Supporto")) ? "#00ff77" : "#ff5555";
+           
+            const eolColor = (os.eol_date.includes("Supported")) ? "#00ff77" : "#ff5555";
             
             container.innerHTML += `
                 <div class="card" style="border-left: 5px solid ${os.type === 'Windows' ? '#0078d4' : '#a2aaad'}">
                     <h2>${os.os_name} <small style="font-size:12px; color:#888;">(${os.type})</small></h2>
                     <p>📅 <strong>Data di Rilascio:</strong> ${os.release_date}</p>
                     <p>📦 <strong>Ultima Patch:</strong> ${os.latest_version} (${os.latest_patch_date})</p>
-                    <p style="color: ${eolColor}">🛑 <strong>Fine Supporto (EOL):</strong> ${os.eol_date}</p>
+                    <p style="color: ${eolColor}">🛑 <strong>End of life (EOL):</strong> ${os.eol_date}</p>
                 </div>
             `;
         });
