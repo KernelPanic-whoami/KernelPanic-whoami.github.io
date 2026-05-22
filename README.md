@@ -9,28 +9,5 @@ If you're bored,play the dino game!
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-why r u here?
-bruh
+22/05/26: bug fixes
 
